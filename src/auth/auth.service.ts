@@ -12,11 +12,13 @@ export class AuthService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
+
   async create(createAuthDto: CreateAuthDto) {
     const user = this.userRepository.create(createAuthDto);
     console.log(user, 'user');
     return this.userRepository.save(user);
   }
+
 
   async login(loginAuthDto: LoginDTO) {
     const user = await this.userRepository.find({
@@ -42,10 +44,12 @@ export class AuthService {
     }
   }
 
+
   async findAll() {
     const user = await this.userRepository.find();
     return user;
   }
+
 
   async findOne(id: number) {
     console.log(id, 'id');
@@ -64,6 +68,7 @@ export class AuthService {
     };
   }
 
+
   async update(id: number, updateAuthDto: UpdateAuthDto) {
     await this.userRepository.update(id, updateAuthDto);
     const updatedUser = await this.userRepository.findOne({ where: { id } });
@@ -79,6 +84,7 @@ export class AuthService {
     };
   }
 
+
   async remove(id: number) {
     const deleteResult = await this.userRepository.delete(id);
     if (!deleteResult.affected) {
@@ -89,15 +95,19 @@ export class AuthService {
     }
     return {
       message: 'User removed successfully',
-      user: null,
+      user: id,
     };
   }
 
+
   async generateAuthtoken(user: LoginDTO) {
-    const token = jwt.sign(user, 'yasdj-dsbai-dwadd-uihjk-ploik', {
+    const token = jwt.sign(user, process.env.JWT_GENERATOR_TOKEN, {
       expiresIn: 86400,
     });
 
-    return token;
+    return {'message': 'Success',
+    'data': {'token': token,
+            'expiresIn': 86400,
+          'type': 'Bearer'}};
   }
 }

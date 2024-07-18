@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ConfigModule } from '@nestjs/config';
 import { ChatMessageModule } from './chat-message/chat-message.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
@@ -17,12 +18,12 @@ import { ChatroomModule } from './chatroom/chatroom.module';
       database: 'chitchat-db',
       entities: ['dist/**/*.entity{.ts,.js}'],
       ssl: true,
-      synchronize: true,
-      logging: true,
+      synchronize: true
     }),
     ChatMessageModule,
     AuthModule,
     ChatroomModule,
+    ConfigModule.forRoot()
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  HttpStatus,
+  HttpCode,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
@@ -16,33 +18,45 @@ import { LoginDTO } from './dto/login.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @HttpCode(HttpStatus.OK)
   @Post('register-user')
   async create(@Body() createAuthDto: CreateAuthDto) {
     return await this.authService.create(createAuthDto);
   }
 
+  @HttpCode(HttpStatus.OK)
   @Post('login')
   async login(@Body() loginAuthDto: LoginDTO) {
     return await this.authService.login(loginAuthDto);
   }
 
+  @HttpCode(HttpStatus.OK)
   @Get('users')
-  findAll() {
-    return this.authService.findAll();
+  async findAll() {
+    return await this.authService.findAll();
   }
 
+  @HttpCode(HttpStatus.OK)
   @Get('user/:id')
-  findOne(@Param('id') id: number) {
-    return this.authService.findOne(+id);
+  async findOne(@Param('id') id: number) {
+    return await this.authService.findOne(+id);
   }
 
+  @HttpCode(HttpStatus.OK)
   @Patch('user/:id')
-  update(@Param('id') id: number, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(+id, updateAuthDto);
+  async update(@Param('id') id: number, @Body() updateAuthDto: UpdateAuthDto) {
+    return await this.authService.update(+id, updateAuthDto);
   }
 
+  @HttpCode(HttpStatus.OK)
   @Delete('user/:id')
-  remove(@Param('id') id: number) {
-    return this.authService.remove(+id);
+  async remove(@Param('id') id: number) {
+    return await this.authService.remove(+id);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('generate-token')
+  async generateToken(@Body() loginAuthDto: LoginDTO) {
+    return this.authService.generateAuthtoken(loginAuthDto);
   }
 }
